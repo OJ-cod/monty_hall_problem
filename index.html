@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Monty Hall Simulation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+    }
+
+    h1 {
+      color: #0066cc;
+    }
+
+    .stats {
+      background: white;
+      padding: 20px 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .stats p {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+
+    .rate {
+      font-weight: bold;
+    }
+
+    .status {
+      margin-top: 20px;
+      font-style: italic;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎯 Monty Hall Simulation Live</h1>
+  <div class="stats">
+    <p>Wins: <span id="wins">0</span></p>
+    <p>Losses: <span id="losses">0</span></p>
+    <p>Total Simulations: <span id="total">0</span></p>
+    <p class="rate">Win Rate: <span id="winRate">0%</span></p>
+    <p class="rate">Loss Rate: <span id="lossRate">0%</span></p>
+  </div>
+  <div class="status" id="status">Updating every 2 seconds...</div>
+
+  <script>
+    async function fetchStats() {
+      try {
+        const res = await fetch('http:///127.0.0.1:5000/stats');
+        const data = await res.json();
+
+        document.getElementById('wins').textContent = data.wins.toLocaleString();
+        document.getElementById('losses').textContent = data.losses.toLocaleString();
+        document.getElementById('total').textContent = data.total.toLocaleString();
+        document.getElementById('winRate').textContent = (data.win_rate * 100).toFixed(2) + '%';
+        document.getElementById('lossRate').textContent = (data.loss_rate * 100).toFixed(2) + '%';
+      } catch (error) {
+        document.getElementById('status').textContent = 'Error connecting to server...';
+        console.error(error);
+      }
+    }
+
+    setInterval(fetchStats, 2000); // fetch every 2 seconds
+    fetchStats(); // initial fetch
+  </script>
+</body>
+</html>
